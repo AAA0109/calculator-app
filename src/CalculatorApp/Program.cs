@@ -7,6 +7,7 @@ public class Program
     {
         Console.Write("Enter numbers separated by comma to add: ");
         string input = Console.ReadLine();
+        input = input.Replace("\\n", "\n");
         Console.WriteLine("Sum: " + Add(input));
     }
 
@@ -17,7 +18,11 @@ public class Program
             return 0;
         }
 
-        var numberArray = numbers.Split(',').Select(int.Parse).ToArray();
+        var numberArray = numbers.Split(new[] { '\n', ',' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(int.Parse)
+            .ToArray();
+
+        // Convert the valid numbers to integers and calculate the sum
         return numberArray.Sum();
     }
 }
