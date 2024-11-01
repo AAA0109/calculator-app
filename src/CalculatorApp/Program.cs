@@ -6,15 +6,23 @@ public class Program
     public static void Main(string[] args)
     {
         Console.Write("Enter numbers separated by comma to add: ");
-        string input = Console.ReadLine();
-        input = input.Replace("\\n", "\n");
-        try
+
+        while (true) // Infinite loop to process input until Ctrl+C
         {
-            Console.WriteLine(Add(input));
-        }
-        catch (ArgumentException ex)
-        {
-            Console.WriteLine(ex.Message);
+            Console.Write("Input: ");
+            string input = Console.ReadLine();
+
+            // Replace "\\n" with the actual newline character if necessary
+            input = input.Replace("\\n", "\n");
+
+            try
+            {
+                Console.WriteLine(Add(input));
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 
