@@ -17,17 +17,7 @@ public class Program
             return 0;
         }
 
-        var numberArray = numbers.Split(',').Select(n =>
-        {
-            int number;
-            return int.TryParse(n, out number) ? number : 0;
-        }).ToArray();
-
-        if (numberArray.Length > 2)
-        {
-            throw new ArgumentException("The input string should contain a maximum of 2 numbers");
-        }
-
+        var numberArray = numbers.Split(',').Select(int.Parse).ToArray();
         return numberArray.Sum();
     }
 }
