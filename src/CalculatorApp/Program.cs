@@ -29,19 +29,24 @@ public class Program
         List<string> delimiters = new List<string> { ",", "\n" };
 
         // Check for custom delimiter syntax
-        if (numbers.StartsWith("//[") && numbers.Contains("]\n"))
+        if (numbers.StartsWith("//"))
         {
-            // Find the end of the delimiter declaration
-            int endDelimiterIndex = numbers.IndexOf("]\n");
-            string customDelimiter = numbers.Substring(3, endDelimiterIndex - 3); // Extract the custom delimiter
-            delimiters.Add(customDelimiter); // Add the custom delimiter to the list
-            numberSection = numbers.Substring(endDelimiterIndex + 2); // Remove the custom delimiter part from the input
-        }
-        else if (numbers.StartsWith("//") && numbers.Length > 4 && numbers[3] == '\n')
-        {
-            char singleCharDelimiter = numbers[2];
-            delimiters.Add(singleCharDelimiter.ToString()); // Add single character custom delimiter
-            numberSection = numbers.Substring(4);
+            int endDelimiterIndex = numbers.IndexOf("\n");
+            string delimiterPart = numbers.Substring(2, endDelimiterIndex - 2);
+
+            // Handle multiple delimiters
+            if (delimiterPart.Contains("]["))
+            {
+                delimiters.AddRange(delimiterPart.Split(new[] { "][" }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(d => d.Trim('[', ']')));
+            }
+            else
+            {
+                // Single character or single length delimiter
+                delimiters.Add(delimiterPart.Trim('[', ']'));
+            }
+
+            numberSection = numbers.Substring(endDelimiterIndex + 1); // Remove the delimiter part from the input
         }
 
         // Split by custom delimiter, comma, or newline characters
