@@ -25,19 +25,27 @@ public class Program
             return 0;
         }
 
-        char customDelimiter = ',';
         string numberSection = numbers;
+        List<string> delimiters = new List<string> { ",", "\n" };
 
         // Check for custom delimiter syntax
-        if (numbers.StartsWith("//") && numbers.Length > 4 && numbers[3] == '\n')
+        if (numbers.StartsWith("//[") && numbers.Contains("]\n"))
         {
-            customDelimiter = numbers[2];
-            numberSection = numbers.Substring(4); // Remove the custom delimiter part from the input
+            // Find the end of the delimiter declaration
+            int endDelimiterIndex = numbers.IndexOf("]\n");
+            string customDelimiter = numbers.Substring(3, endDelimiterIndex - 3); // Extract the custom delimiter
+            delimiters.Add(customDelimiter); // Add the custom delimiter to the list
+            numberSection = numbers.Substring(endDelimiterIndex + 2); // Remove the custom delimiter part from the input
+        }
+        else if (numbers.StartsWith("//") && numbers.Length > 4 && numbers[3] == '\n')
+        {
+            char singleCharDelimiter = numbers[2];
+            delimiters.Add(singleCharDelimiter.ToString()); // Add single character custom delimiter
+            numberSection = numbers.Substring(4);
         }
 
         // Split by custom delimiter, comma, or newline characters
-        var delimiters = new[] { customDelimiter, '\n' };
-        var numberArray = numberSection.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+        var numberArray = numberSection.Split(delimiters.ToArray(), StringSplitOptions.RemoveEmptyEntries);
 
         // Parse numbers and apply constraints
         var parsedNumbers = new List<int>();
