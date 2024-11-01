@@ -10,7 +10,7 @@ public class Program
         input = input.Replace("\\n", "\n");
         try
         {
-            Console.WriteLine("Sum: " + Add(input));
+            Console.WriteLine(Add(input));
         }
         catch (ArgumentException ex)
         {
@@ -18,11 +18,11 @@ public class Program
         }
     }
 
-    public static int Add(string numbers)
+    public static string Add(string numbers)
     {
         if (string.IsNullOrEmpty(numbers))
         {
-            return 0;
+            return "0 = 0";
         }
 
         string numberSection = numbers;
@@ -54,13 +54,26 @@ public class Program
 
         // Parse numbers and apply constraints
         var parsedNumbers = new List<int>();
+        var formulaParts = new List<string>();
 
         foreach (var number in numberArray)
         {
             // Try parsing each item and add valid integers to the list
             if (int.TryParse(number, out int parsedNumber))
             {
-                parsedNumbers.Add(parsedNumber);
+                if (parsedNumber <= 1000)
+                {
+                    parsedNumbers.Add(parsedNumber);
+                    formulaParts.Add(parsedNumber.ToString());
+                }
+                else
+                {
+                    formulaParts.Add("0");
+                }
+            }
+            else
+            {
+                formulaParts.Add("0");
             }
         }
 
@@ -72,7 +85,10 @@ public class Program
             throw new ArgumentException("Negative numbers are not allowed: " + string.Join(", ", negativeNumbers));
         }
 
-        // Exclude numbers greater than 1000 and calculate the sum
-        return parsedNumbers.Where(n  => n <= 1000).Sum();
+        int totalSum = parsedNumbers.Sum();
+
+        // Create the formula string
+        string formula = string.Join("+", formulaParts);
+        return $"{formula} = {totalSum}";
     }
 }
