@@ -25,10 +25,32 @@ public class Program
             return 0;
         }
 
-        var numberArray = numbers.Split(new[] { ',', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        char customDelimiter = ',';
+        string numberSection = numbers;
 
-        // Parse numbers and check for negatives
-        var parsedNumbers = numberArray.Select(int.Parse).ToList();
+        // Check for custom delimiter syntax
+        if (numbers.StartsWith("//") && numbers.Length > 4 && numbers[3] == '\n')
+        {
+            customDelimiter = numbers[2];
+            numberSection = numbers.Substring(4); // Remove the custom delimiter part from the input
+        }
+
+        // Split by custom delimiter, comma, or newline characters
+        var delimiters = new[] { customDelimiter, '\n' };
+        var numberArray = numberSection.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+
+        // Parse numbers and apply constraints
+        var parsedNumbers = new List<int>();
+
+        foreach (var number in numberArray)
+        {
+            // Try parsing each item and add valid integers to the list
+            if (int.TryParse(number, out int parsedNumber))
+            {
+                parsedNumbers.Add(parsedNumber);
+            }
+        }
+
         var negativeNumbers = parsedNumbers.Where(n => n < 0).ToList();
 
         // If any negative numbers are found, throw an exception
@@ -37,6 +59,7 @@ public class Program
             throw new ArgumentException("Negative numbers are not allowed: " + string.Join(", ", negativeNumbers));
         }
 
-        return parsedNumbers.Sum();
+        // Exclude numbers greater than 1000 and calculate the sum
+        return parsedNumbers.Where(n  => n <= 1000).Sum();
     }
 }
