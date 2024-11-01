@@ -8,7 +8,14 @@ public class Program
         Console.Write("Enter numbers separated by comma to add: ");
         string input = Console.ReadLine();
         input = input.Replace("\\n", "\n");
-        Console.WriteLine("Sum: " + Add(input));
+        try
+        {
+            Console.WriteLine("Sum: " + Add(input));
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 
     public static int Add(string numbers)
@@ -18,11 +25,18 @@ public class Program
             return 0;
         }
 
-        var numberArray = numbers.Split(new[] { '\n', ',' }, StringSplitOptions.RemoveEmptyEntries)
-            .Select(int.Parse)
-            .ToArray();
+        var numberArray = numbers.Split(new[] { ',', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-        // Convert the valid numbers to integers and calculate the sum
-        return numberArray.Sum();
+        // Parse numbers and check for negatives
+        var parsedNumbers = numberArray.Select(int.Parse).ToList();
+        var negativeNumbers = parsedNumbers.Where(n => n < 0).ToList();
+
+        // If any negative numbers are found, throw an exception
+        if (negativeNumbers.Any())
+        {
+            throw new ArgumentException("Negative numbers are not allowed: " + string.Join(", ", negativeNumbers));
+        }
+
+        return parsedNumbers.Sum();
     }
 }
