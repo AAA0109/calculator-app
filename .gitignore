@@ -1,0 +1,22 @@
+# Ignore build and debug files
+bin/
+obj/
+
+# Ignore user-specific files
+*.suo
+*.user
+
+# Ignore build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Ignore Visual Studio cache/options directory
+.vs/
+
+# Ignore MSTest and NUnit test results
+[Tt]est[Rr]esult*/
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
